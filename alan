@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+require 'thor'
+require 'mini_magick'
+require 'prawn'
+require 'yaml'
+require 'pry'
+require 'securerandom'
+require 'fileutils'
+require 'pdf_forms'
+require './alan'
+
+class DocumentAutomatorCLI < Thor
+
+  @@verification_dir = ENV['VERIFICATION_DOCUMENT_PATH']
+
+  desc "process", "Combine all docs and add the cover page"
+  options :id => :required
+  def process
+    dir = "#{@@verification_dir}/#{options[:id]}"
+    DocumentAutomator.create_cover_page(options[:id], 'cover.yml')
+    puts "Created cover.pdf for #{options[:id]}"
+    DocumentAutomator.combine_directory_into_single_pdf(dir)
+    puts "Created combined_verifications.pdf for #{options[:id]}"
+  end
+
+  desc "cover", "Create a cover page"
+  options :id => :required
+  def cover
+    DocumentAutomator.create_cover_page(options[:id], 'cover.yml')
+    puts "Created cover.pdf for #{options[:id]}"
+  end
+
+  desc "combine", "Combine all docs in a directory"
+  options :id => :required
+  def combine
+    dir = "#{@@verification_dir}/#{options[:id]}"
+    DocumentAutomator.combine_directory_into_single_pdf(dir)
+    puts "Created combined_verifications.pdf for #{options[:id]}"
+  end
+end
+
+DocumentAutomatorCLI.start

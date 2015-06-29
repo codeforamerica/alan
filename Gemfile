@@ -1,0 +1,5 @@
+gem 'thor'
+gem 'mini_magick'
+gem 'pdf-forms'
+gem 'prawn'
+gem 'pry'
